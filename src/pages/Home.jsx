@@ -51,7 +51,7 @@ export default function Home({ search }) {
         fetchCategories();
     }, []);
 
-    // Filter products on every change (category, price, search)
+    // Filter products
     useEffect(() => {
         if (!products.length) return;
 
@@ -73,19 +73,20 @@ export default function Home({ search }) {
     }, [products, selectedCategory, maxPrice, search]);
 
     return (
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
             {products.length > 0 && <HeroSection products={products} />}
 
             {/* Categories & Price Filter */}
             <section className="mt-12 mb-6">
-                <div className="flex flex-col items-center gap-4">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                     <CategoriesFilter
                         categories={["all", ...categories]}
                         selected={selectedCategory}
                         onSelect={setSelectedCategory}
+                        className="w-full md:w-auto"
                     />
 
-                    <div className="inline-flex items-center bg-white p-3 rounded-xl shadow gap-3">
+                    <div className="flex items-center w-full md:w-auto bg-white p-3 rounded-xl shadow gap-3 justify-between md:justify-start">
                         <span className="text-gray-700 font-medium whitespace-nowrap">
                             Max: ${maxPrice}
                         </span>
@@ -95,7 +96,7 @@ export default function Home({ search }) {
                             max={sliderMax}
                             value={maxPrice}
                             onChange={(e) => setMaxPrice(Number(e.target.value))}
-                            className="h-2 w-40 md:w-48 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full cursor-pointer"
+                            className="h-2 w-full md:w-48 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full cursor-pointer"
                         />
                     </div>
                 </div>
@@ -111,12 +112,12 @@ export default function Home({ search }) {
 
             {/* Product Grid */}
             <div className="text-center mt-10 mb-6">
-                <h2 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600 mb-2">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600 mb-2">
                     {selectedCategory && selectedCategory !== "all"
                         ? `${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} Products`
                         : "All Products"}
                 </h2>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-600 text-sm sm:text-base">
                     Showing {displayProducts.length} item(s)
                 </p>
             </div>
@@ -125,7 +126,7 @@ export default function Home({ search }) {
                 {loading ? (
                     <p className="text-center text-gray-600 py-12">Loading products...</p>
                 ) : displayProducts.length > 0 ? (
-                    <div className="grid gap-6 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mb-16">
+                    <div className="grid gap-4 sm:gap-6 md:gap-8 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mb-16">
                         {displayProducts.map((product) => (
                             <ProductCard
                                 key={product.id}

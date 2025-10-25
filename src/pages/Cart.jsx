@@ -26,8 +26,8 @@ export default function Cart() {
     }
 
     return (
-        <div className="max-w-5xl mx-auto p-4">
-            <h1 className="text-2xl font-bold mb-6">Your Cart</h1>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-8">
+            <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-center md:text-left">Your Cart</h1>
 
             <div className="flex flex-col md:flex-row gap-6">
                 {/* Products list */}
@@ -35,36 +35,38 @@ export default function Cart() {
                     {cart.map((product) => (
                         <div
                             key={product.id}
-                            className="flex items-center gap-4 bg-white p-4 rounded-2xl shadow-[0_10px_25px_rgba(150,150,200,0.25)] hover:shadow-[0_12px_30px_rgba(150,150,200,0.35)] transition-all duration-300"
+                            className="flex flex-col sm:flex-row items-center sm:items-start gap-4 bg-white p-4 rounded-2xl shadow-[0_10px_25px_rgba(150,150,200,0.25)] hover:shadow-[0_12px_30px_rgba(150,150,200,0.35)] transition-all duration-300"
                         >
                             <img
                                 src={product.image}
                                 alt={product.title}
-                                className="w-24 h-24 object-contain rounded-xl"
+                                className="w-32 h-32 sm:w-24 sm:h-24 object-contain rounded-xl"
                             />
 
-                            <div className="flex-1">
-                                <h2 className="text-sm font-semibold line-clamp-2">{product.title}</h2>
-                                <p className="text-xs text-gray-500">{product.category}</p>
-                                <p className="mt-1 text-lg font-bold bg-gradient-to-r from-pink-500 to-indigo-500 text-transparent bg-clip-text">
+                            <div className="flex-1 text-center sm:text-left">
+                                <h2 className="text-sm sm:text-base font-semibold line-clamp-2">{product.title}</h2>
+                                <p className="text-xs sm:text-sm text-gray-500">{product.category}</p>
+                                <p className="mt-1 text-lg sm:text-xl font-bold bg-gradient-to-r from-pink-500 to-indigo-500 text-transparent bg-clip-text">
                                     ${product.price * product.qty}
                                 </p>
                             </div>
 
-                            <div className="flex items-center gap-2">
-                                <button
-                                    onClick={() => handleQtyChange(product, -1)}
-                                    className="px-3 py-1 bg-gray-200 rounded-full hover:bg-gray-300 transition"
-                                >
-                                    -
-                                </button>
-                                <span className="px-2">{product.qty}</span>
-                                <button
-                                    onClick={() => handleQtyChange(product, 1)}
-                                    className="px-3 py-1 bg-gray-200 rounded-full hover:bg-gray-300 transition"
-                                >
-                                    +
-                                </button>
+                            <div className="flex items-center justify-center sm:flex-col gap-2 sm:gap-3 mt-2 sm:mt-0">
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => handleQtyChange(product, -1)}
+                                        className="px-3 py-1 bg-gray-200 rounded-full hover:bg-gray-300 transition"
+                                    >
+                                        -
+                                    </button>
+                                    <span className="px-2">{product.qty}</span>
+                                    <button
+                                        onClick={() => handleQtyChange(product, 1)}
+                                        className="px-3 py-1 bg-gray-200 rounded-full hover:bg-gray-300 transition"
+                                    >
+                                        +
+                                    </button>
+                                </div>
                                 <button
                                     onClick={() => {
                                         removeItem(product.id);
@@ -80,15 +82,15 @@ export default function Cart() {
                 </div>
 
                 {/* Pricing summary */}
-                <div className="w-full md:w-1/3 bg-white p-6 rounded-2xl shadow-[0_10px_25px_rgba(150,150,200,0.25)]">
-                    <h2 className="text-xl font-bold mb-4">Summary</h2>
-                    <div className="flex justify-between mb-2">
+                <div className="w-full md:w-1/3 bg-white p-6 rounded-2xl shadow-[0_10px_25px_rgba(150,150,200,0.25)] flex flex-col gap-4">
+                    <h2 className="text-xl sm:text-2xl font-bold mb-2">Summary</h2>
+                    <div className="flex justify-between text-sm sm:text-base">
                         <span>Items:</span>
                         <span>{totalItems}</span>
                     </div>
-                    <div className="flex justify-between mb-4">
+                    <div className="flex justify-between text-sm sm:text-base font-bold">
                         <span>Total:</span>
-                        <span className="font-bold">${totalPrice.toFixed(2)}</span>
+                        <span>${totalPrice.toFixed(2)}</span>
                     </div>
 
                     <button
@@ -100,7 +102,7 @@ export default function Cart() {
 
                     <button
                         onClick={clearCart}
-                        className="mt-3 w-full px-4 py-2 rounded-full font-medium bg-red-500 text-white hover:opacity-90 active:scale-95 transition"
+                        className="w-full px-4 py-2 rounded-full font-medium bg-red-500 text-white hover:opacity-90 active:scale-95 transition"
                     >
                         Clear Cart
                     </button>
