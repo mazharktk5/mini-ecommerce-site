@@ -31,17 +31,13 @@ export default function Header() {
                 </div>
 
                 {/* Desktop Search */}
-                <form
-                    onSubmit={handleSubmit}
-                    className="hidden sm:flex flex-1 justify-center"
-                >
+                <form onSubmit={handleSubmit} className="hidden sm:flex flex-1 justify-center">
                     <input
                         type="text"
                         placeholder="Search products..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-full max-w-md border border-gray-300 rounded-full px-5 py-2.5 
-            text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                        className="w-full max-w-md border border-gray-300 rounded-full px-5 py-2.5 text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none"
                     />
                 </form>
 
@@ -61,11 +57,8 @@ export default function Header() {
                     </NavLink>
                 </nav>
 
-                {/* Hamburger Button */}
-                <button
-                    onClick={() => setMenuOpen(!menuOpen)}
-                    className="md:hidden text-gray-700 focus:outline-none"
-                >
+                {/* Hamburger */}
+                <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden text-gray-700 focus:outline-none">
                     <svg
                         className="w-7 h-7"
                         fill="none"
@@ -87,10 +80,7 @@ export default function Header() {
             {/* Mobile Menu */}
             {menuOpen && (
                 <div className="md:hidden bg-white border-t">
-                    <form
-                        onSubmit={handleSubmit}
-                        className="p-4 flex justify-center"
-                    >
+                    <form onSubmit={handleSubmit} className="p-4 flex justify-center">
                         <input
                             type="text"
                             placeholder="Search products..."

@@ -28,9 +28,9 @@ export default function ProductCard({ product, onOpen }) {
     return (
         <div
             className="bg-white rounded-2xl p-5 flex flex-col items-center text-center
-        shadow-[0_10px_25px_rgba(150,150,200,0.25)]
-        hover:shadow-[0_12px_30px_rgba(150,150,200,0.35)]
-        transition-all duration-300 select-none cursor-pointer"
+            shadow-[0_10px_25px_rgba(150,150,200,0.25)]
+            hover:shadow-[0_12px_30px_rgba(150,150,200,0.35)]
+            transition-all duration-300 select-none cursor-pointer"
             onClick={() => onOpen(product)}
         >
             <div className="h-44 w-full flex items-center justify-center mb-4 relative">
@@ -70,7 +70,7 @@ export default function ProductCard({ product, onOpen }) {
             <button
                 onClick={handleAddOrRemove}
                 className={`mt-3 w-full text-sm px-4 py-2 rounded-full font-medium transition-all duration-200
-          ${inCart ? "bg-red-500 text-white hover:opacity-90 active:scale-95"
+                ${inCart ? "bg-red-500 text-white hover:opacity-90 active:scale-95"
                         : "bg-gradient-to-r from-gray-900 to-gray-800 text-white hover:opacity-90 active:scale-95"}`}
             >
                 {inCart ? "Remove from cart" : "Add to Cart"}

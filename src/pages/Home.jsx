@@ -16,37 +16,41 @@ export default function Home() {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [maxPrice, setMaxPrice] = useState(1000);
-    const [sliderMax, setSliderMax] = useState(1000); // slider max independent
 
-    const { cartItems } = useCart();
+    const [maxPrice, setMaxPrice] = useState(0); // slider value
+    const [sliderMax, setSliderMax] = useState(1000); // maximum slider
+
     const location = useLocation();
     const searchText = new URLSearchParams(location.search).get("search")?.toLowerCase() || "";
 
-    // Fetch all products
+    // Fetch products
     async function fetchProducts() {
         try {
             const res = await fetch("https://fakestoreapi.com/products");
             const data = await res.json();
             setProducts(data);
-            setDisplayProducts(data);
 
-            // Dynamically set slider max to highest product price
+            // set slider max to highest product price
             const highestPrice = Math.ceil(Math.max(...data.map(p => p.price)));
-            setMaxPrice(highestPrice);
             setSliderMax(highestPrice);
+            setMaxPrice(highestPrice);
 
             setLoading(false);
-        } catch {
+        } catch (err) {
+            console.error(err);
             setLoading(false);
         }
     }
 
     // Fetch categories
     async function fetchCategories() {
-        const res = await fetch("https://fakestoreapi.com/products/categories");
-        const data = await res.json();
-        setCategories(data);
+        try {
+            const res = await fetch("https://fakestoreapi.com/products/categories");
+            const data = await res.json();
+            setCategories(data);
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     useEffect(() => {
@@ -55,30 +59,34 @@ export default function Home() {
         fetchCategories();
     }, []);
 
-    // Filter products whenever maxPrice, category, search, or products change
+    // Filter products whenever maxPrice, category, searchText, or products change
     useEffect(() => {
         if (!products.length) return;
 
-        let filtered = products
-            .filter(item => item.price <= maxPrice)
-            .filter(item => item.title.toLowerCase().includes(searchText));
+        let filtered = products.filter(
+            (item) => item.price <= maxPrice
+        );
+
+        if (searchText.trim() !== "") {
+            filtered = filtered.filter((item) =>
+                item.title.toLowerCase().includes(searchText)
+            );
+        }
 
         if (selectedCategory) {
-            filtered = filtered.filter(item => item.category === selectedCategory);
+            filtered = filtered.filter((item) => item.category === selectedCategory);
         }
 
         setDisplayProducts(filtered);
-    }, [maxPrice, selectedCategory, products, searchText]);
+    }, [products, maxPrice, selectedCategory, searchText]);
 
     return (
         <div className="container mx-auto px-4">
-
             {products.length > 0 && <HeroSection products={products} />}
 
             {/* Categories & Price Filter */}
             <section className="mt-12 mb-6">
                 <div className="flex flex-col md:flex-row items-center md:justify-between gap-4">
-
                     {/* Categories */}
                     <CategoriesFilter
                         categories={categories}
@@ -94,7 +102,7 @@ export default function Home() {
                         <input
                             type="range"
                             min={0}
-                            max={sliderMax} // use separate sliderMax
+                            max={sliderMax}
                             value={maxPrice}
                             onChange={(e) => setMaxPrice(Number(e.target.value))}
                             className="h-2 w-40 md:w-48 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full cursor-pointer"
@@ -129,7 +137,7 @@ export default function Home() {
                     </p>
                 ) : displayProducts.length > 0 ? (
                     <div className="grid gap-6 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mb-16">
-                        {displayProducts.map(product => (
+                        {displayProducts.map((product) => (
                             <ProductCard
                                 key={product.id}
                                 product={product}
