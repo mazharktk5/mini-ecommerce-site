@@ -1,8 +1,8 @@
 import React from "react";
 import ProductCard from "./ProductCard";
 
-export default function NewArrivals({ products, onAdd, onOpen }) {
-    const arrivals = [...products].reverse().slice(0, 4);
+export default function NewArrivals({ products, onOpen }) {
+    const arrivals = [...products].slice(-4);
 
     return (
         <section className="mb-16">
@@ -14,17 +14,12 @@ export default function NewArrivals({ products, onAdd, onOpen }) {
 
             <div className="grid gap-8 grid-cols-2 sm:grid-cols-2 
                 md:grid-cols-3 lg:grid-cols-4 justify-items-center">
-
-                {arrivals.map(product => (
+                {arrivals.map((product) => (
                     <div
                         key={product.id}
                         className="transform hover:scale-105 transition-all duration-300 w-full"
                     >
-                        <ProductCard
-                            product={product}
-                            onAdd={() => onAdd(product)}
-                            onOpen={onOpen}
-                        />
+                        <ProductCard product={product} onOpen={onOpen} />
                     </div>
                 ))}
             </div>

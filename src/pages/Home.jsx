@@ -14,14 +14,16 @@ export default function Home() {
     const [products, setProducts] = useState([]);
     const [displayProducts, setDisplayProducts] = useState([]);
     const [categories, setCategories] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState(null);
+    const [selectedCategory, setSelectedCategory] = useState("all");
     const [loading, setLoading] = useState(true);
 
-    const [maxPrice, setMaxPrice] = useState(0); // slider value
-    const [sliderMax, setSliderMax] = useState(1000); // maximum slider
+    const [maxPrice, setMaxPrice] = useState(0);
+    const [sliderMax, setSliderMax] = useState(1000);
 
     const location = useLocation();
-    const searchText = new URLSearchParams(location.search).get("search")?.toLowerCase() || "";
+    const searchText = new URLSearchParams(location.search)
+        .get("search")
+        ?.toLowerCase() || "";
 
     // Fetch products
     async function fetchProducts() {
@@ -30,8 +32,7 @@ export default function Home() {
             const data = await res.json();
             setProducts(data);
 
-            // set slider max to highest product price
-            const highestPrice = Math.ceil(Math.max(...data.map(p => p.price)));
+            const highestPrice = Math.ceil(Math.max(...data.map((p) => p.price)));
             setSliderMax(highestPrice);
             setMaxPrice(highestPrice);
 
@@ -59,13 +60,17 @@ export default function Home() {
         fetchCategories();
     }, []);
 
-    // Filter products whenever maxPrice, category, searchText, or products change
+    // Filter products based on category, price, and search
     useEffect(() => {
         if (!products.length) return;
 
-        let filtered = products.filter(
-            (item) => item.price <= maxPrice
-        );
+        let filtered = [...products];
+
+        if (selectedCategory && selectedCategory !== "all") {
+            filtered = filtered.filter((item) => item.category === selectedCategory);
+        }
+
+        filtered = filtered.filter((item) => item.price <= maxPrice);
 
         if (searchText.trim() !== "") {
             filtered = filtered.filter((item) =>
@@ -73,12 +78,8 @@ export default function Home() {
             );
         }
 
-        if (selectedCategory) {
-            filtered = filtered.filter((item) => item.category === selectedCategory);
-        }
-
         setDisplayProducts(filtered);
-    }, [products, maxPrice, selectedCategory, searchText]);
+    }, [products, selectedCategory, maxPrice, searchText]);
 
     return (
         <div className="container mx-auto px-4">
@@ -86,15 +87,13 @@ export default function Home() {
 
             {/* Categories & Price Filter */}
             <section className="mt-12 mb-6">
-                <div className="flex flex-col md:flex-row items-center md:justify-between gap-4">
-                    {/* Categories */}
+                <div className="flex flex-col items-center gap-4">
                     <CategoriesFilter
-                        categories={categories}
+                        categories={["all", ...categories]}
                         selected={selectedCategory}
                         onSelect={setSelectedCategory}
                     />
 
-                    {/* Price Filter */}
                     <div className="inline-flex items-center bg-white p-3 rounded-xl shadow gap-3">
                         <span className="text-gray-700 font-medium whitespace-nowrap">
                             Max: ${maxPrice}
@@ -111,17 +110,18 @@ export default function Home() {
                 </div>
             </section>
 
-            {!selectedCategory && (
+            {/* Trending & New Arrivals */}
+            {(!selectedCategory || selectedCategory === "all") && (
                 <>
-                    <TrendingProducts products={products} onOpen={setSelectedProduct} />
-                    <NewArrivals products={products} onOpen={setSelectedProduct} />
+                    <TrendingProducts products={displayProducts} onOpen={setSelectedProduct} />
+                    <NewArrivals products={displayProducts} onOpen={setSelectedProduct} />
                 </>
             )}
 
             {/* Product Grid */}
             <div className="text-center mt-10 mb-6">
                 <h2 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600 mb-2">
-                    {selectedCategory
+                    {selectedCategory && selectedCategory !== "all"
                         ? `${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} Products`
                         : "All Products"}
                 </h2>
@@ -132,9 +132,7 @@ export default function Home() {
 
             <div className="mt-10">
                 {loading ? (
-                    <p className="text-center text-gray-600 py-12">
-                        Loading products...
-                    </p>
+                    <p className="text-center text-gray-600 py-12">Loading products...</p>
                 ) : displayProducts.length > 0 ? (
                     <div className="grid gap-6 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mb-16">
                         {displayProducts.map((product) => (
@@ -146,9 +144,7 @@ export default function Home() {
                         ))}
                     </div>
                 ) : (
-                    <p className="text-center text-gray-600 py-12">
-                        No products found
-                    </p>
+                    <p className="text-center text-gray-600 py-12">No products found</p>
                 )}
 
                 <ProductModal

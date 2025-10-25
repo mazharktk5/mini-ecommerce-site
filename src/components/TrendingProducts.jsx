@@ -1,7 +1,7 @@
 import React from "react";
 import ProductCard from "./ProductCard";
 
-export default function TrendingProducts({ products, onAdd, onOpen }) {
+export default function TrendingProducts({ products, onOpen }) {
     const trending = [...products]
         .sort((a, b) => b.rating.rate - a.rating.rate)
         .slice(0, 4);
@@ -16,17 +16,12 @@ export default function TrendingProducts({ products, onAdd, onOpen }) {
 
             <div className="grid gap-8 grid-cols-2 sm:grid-cols-2 
                 md:grid-cols-3 lg:grid-cols-4 justify-items-center">
-
-                {trending.map(product => (
+                {trending.map((product) => (
                     <div
                         key={product.id}
                         className="transform hover:scale-105 transition-all duration-300 w-full"
                     >
-                        <ProductCard
-                            product={product}
-                            onAdd={() => onAdd(product)}
-                            onOpen={onOpen}
-                        />
+                        <ProductCard product={product} onOpen={onOpen} />
                     </div>
                 ))}
             </div>
