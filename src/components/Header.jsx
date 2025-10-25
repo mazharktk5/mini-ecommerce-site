@@ -1,22 +1,12 @@
-// Header.jsx (search already working)
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { NavLink } from "react-router-dom";
 
-export default function Header() {
+export default function Header({ search, onSearchChange }) {
     const { totalItems } = useCart();
+    const [menuOpen, setMenuOpen] = React.useState(false);
     const navigate = useNavigate();
-    const [search, setSearch] = useState("");
-    const [menuOpen, setMenuOpen] = useState(false);
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (search.trim() === "") return;
-        navigate(`/?search=${encodeURIComponent(search.trim())}`);
-        setSearch("");
-        setMenuOpen(false);
-    };
 
     return (
         <header className="bg-white shadow-md sticky top-0 z-20">
@@ -28,15 +18,16 @@ export default function Header() {
                     Trendify
                 </div>
 
-                <form onSubmit={handleSubmit} className="hidden sm:flex flex-1 justify-center">
+                {/* Search input */}
+                <div className="hidden sm:flex flex-1 justify-center">
                     <input
                         type="text"
                         placeholder="Search products..."
                         value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        onChange={(e) => onSearchChange(e.target.value)}
                         className="w-full max-w-md border border-gray-300 rounded-full px-5 py-2.5 text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none"
                     />
-                </form>
+                </div>
 
                 <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
                     <NavLink to="/checkout" className={({ isActive }) => isActive ? "text-blue-600 font-semibold" : "text-gray-700"}>
@@ -74,15 +65,15 @@ export default function Header() {
 
             {menuOpen && (
                 <div className="md:hidden bg-white border-t">
-                    <form onSubmit={handleSubmit} className="p-4 flex justify-center">
+                    <div className="p-4 flex justify-center">
                         <input
                             type="text"
                             placeholder="Search products..."
                             value={search}
-                            onChange={(e) => setSearch(e.target.value)}
+                            onChange={(e) => onSearchChange(e.target.value)}
                             className="w-full border border-gray-300 rounded-full px-4 py-2 text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none"
                         />
-                    </form>
+                    </div>
 
                     <nav className="flex flex-col p-4 gap-4 text-sm font-medium">
                         <NavLink onClick={() => setMenuOpen(false)} to="/checkout" className={({ isActive }) => isActive ? "text-blue-600 font-semibold" : "text-gray-700"}>

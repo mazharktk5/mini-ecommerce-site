@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { useCart } from "../context/CartContext";
-
 import HeroSection from "../components/HeroSection";
 import CategoriesFilter from "../components/CategoriesFilter";
 import TrendingProducts from "../components/TrendingProducts";
@@ -9,21 +6,15 @@ import NewArrivals from "../components/NewArrivals";
 import ProductCard from "../components/ProductCard";
 import ProductModal from "../components/ProductModal";
 
-export default function Home() {
+export default function Home({ search }) {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [products, setProducts] = useState([]);
     const [displayProducts, setDisplayProducts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("all");
     const [loading, setLoading] = useState(true);
-
     const [maxPrice, setMaxPrice] = useState(0);
     const [sliderMax, setSliderMax] = useState(1000);
-
-    const location = useLocation();
-    const searchText = new URLSearchParams(location.search)
-        .get("search")
-        ?.toLowerCase() || "";
 
     // Fetch products
     async function fetchProducts() {
@@ -60,7 +51,7 @@ export default function Home() {
         fetchCategories();
     }, []);
 
-    // Filter products based on category, price, and search
+    // Filter products on every change (category, price, search)
     useEffect(() => {
         if (!products.length) return;
 
@@ -72,14 +63,14 @@ export default function Home() {
 
         filtered = filtered.filter((item) => item.price <= maxPrice);
 
-        if (searchText.trim() !== "") {
+        if (search && search.trim() !== "") {
             filtered = filtered.filter((item) =>
-                item.title.toLowerCase().includes(searchText)
+                item.title.toLowerCase().includes(search.toLowerCase())
             );
         }
 
         setDisplayProducts(filtered);
-    }, [products, selectedCategory, maxPrice, searchText]);
+    }, [products, selectedCategory, maxPrice, search]);
 
     return (
         <div className="container mx-auto px-4">
